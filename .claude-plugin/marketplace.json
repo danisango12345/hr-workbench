@@ -1,0 +1,13 @@
+{
+  "name": "danisango12345-hr-workbench",
+  "description": "Personal HR business-partner workbench plugin",
+  "owner": { "name": "Dani", "email": "dani@sonderhr.co" },
+  "plugins": [
+    {
+      "name": "hr-workbench",
+      "source": "./",
+      "description": "HR business-partner workbench: 1:1s, chasing commitments, partnering prep, research, and build/verification guardrails.",
+      "version": "1.0.0"
+    }
+  ]
+}

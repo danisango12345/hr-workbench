@@ -1,0 +1,11 @@
+{
+  "name": "hr-workbench",
+  "version": "1.0.0",
+  "description": "HR business-partner workbench: 1:1s, chasing commitments, partnering prep, research, and build/verification guardrails.",
+  "author": {
+    "name": "Dani",
+    "email": "dani@sonderhr.co"
+  },
+  "repository": "https://github.com/danisango12345/hr-workbench",
+  "keywords": ["hr", "people-ops", "1-on-1", "partnering", "research"]
+}
