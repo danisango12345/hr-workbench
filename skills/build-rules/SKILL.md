@@ -17,13 +17,24 @@ decides whether survivors are worth the effort. The third governs how anything b
 Four rules about what AI shouldn't touch at all. Failing any one ends the discussion, however much
 time the tool would save.
 
-### 1. Never decide about a named individual
+### 1. Never decide about a named individual — and never feed a decision about one
+
+Two questions, not one. A tool fails if either is true:
+
+**Does it select, rank, or score specific people?** Redundancy selection, performance ranking,
+promotion shortlists, candidate screening, flight-risk scoring, calibration outcomes.
+
+**Would its output be used to accept or reject someone?** This is the harder test and it catches
+more. A tool can look entirely innocent and still be decisive — a "candidate summary" that ranks
+nobody, but which a hiring manager reads immediately before saying no. A "team overview" that
+informs who gets cut. The tool didn't decide; it supplied the thing the decision was made on.
+
+Ask what the output touches downstream, not just what the tool does. If the honest answer is that
+someone will read it and then accept or reject a named person, it fails — regardless of how neutral
+the output looks.
 
 General artifacts — policies, templates, communications, analysis in aggregate — can be drafted and
-then routed for review. Anything that **selects, ranks, or scores specific people** cannot, ever.
-
-That covers: redundancy selection, performance ranking, promotion shortlists, candidate screening,
-flight-risk scoring, calibration outcomes.
+then routed for review. Nothing that determines an outcome for a named person can.
 
 **The distinction:** a policy is judged on its wording, and it can be checked against the statute. A
 layoff is judged on how the list was arrived at — and "the tool helped" is indefensible there
@@ -31,7 +42,7 @@ regardless of how good the output was. It is also the most litigated area of AI 
 where HR professionals have been named individually in lawsuits.
 
 *Allowed:* drafting a parental leave policy, then routing to legal.
-*Never:* running a layoff audit.
+*Never:* running a layoff audit — or producing the summary someone reads before running one.
 
 ### 2. The encounter stays human — and so does the chain around it
 
@@ -86,7 +97,7 @@ eventually works out which they got.
 
 ### 5. What does doing it by hand actually cost?
 
-Not frequency. **Cost**, counted four ways:
+Not frequency, and not whether it's repetitive. **Cost**, counted four ways:
 
 - **Hours** per year — instances × time each
 - **Dread** — work that gets avoided, where the delay costs more than the task
@@ -95,6 +106,8 @@ Not frequency. **Cost**, counted four ways:
 
 A ten-hour job done twice a year clears this easily. A five-minute daily job might not, if those
 five minutes aren't a problem.
+A repetitive task isn't automatically worth automating — repetitive and cheap is still not worth
+building for.
 
 ---
 
@@ -159,6 +172,7 @@ the part that requires them.
 | Difficult feedback **preparer** | Build | Rule 3 satisfied — prepares, doesn't produce |
 | Difficult feedback **drafter** | No | Rule 3 |
 | Reasoning out what a delay costs, for you | No | Rule 3 — ask the questions, don't answer them |
+| Candidate summary for a hiring manager | No | Rule 1, second question — read immediately before a yes or no |
 | Termination or disciplinary drafting | No | Rule 2 — approved forms only, separate handling |
 | Layoff or redundancy audit | No | Rule 1 |
 | Performance ranking or calibration | No | Rule 1 |
