@@ -1,6 +1,6 @@
 # hr-workbench
 
-A personal Cowork/Claude Code plugin for HR business-partner work. Bundles seven skills that help run 1:1s, hold people to their commitments, prepare for leader conversations, research policy and market-practice questions, and keep AI-built tools inside sensible guardrails.
+A personal Cowork/Claude Code plugin for HR business-partner work. Bundles eight skills that help run 1:1s, hold people to their commitments, prepare for leader conversations, research policy and market-practice questions, explain things in plain language, and keep AI-built tools inside sensible guardrails.
 
 ## Skills
 
@@ -13,6 +13,7 @@ A personal Cowork/Claude Code plugin for HR business-partner work. Bundles seven
 | `research` | Research an HR or business-ops question across documents, law, and market data, grading every claim by source quality. |
 | `ask-before-producing` | Pause at the shift from gathering to producing and confirm the person is ready. |
 | `verification-before-completion` | Require evidence before claiming something is done, correct, or compliant. |
+| `eli5` | Explain a site, screenshot or snippet in plain, jargon-free language, pitched at a named audience. |
 
 ## Install
 
