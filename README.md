@@ -1,6 +1,6 @@
 # hr-workbench
 
-A personal Cowork/Claude Code plugin for HR business-partner work. Bundles eight skills that help run 1:1s, hold people to their commitments, prepare for leader conversations, research policy and market-practice questions, explain things in plain language, and keep AI-built tools inside sensible guardrails.
+A personal Cowork/Claude Code plugin for HR business-partner work. Bundles five skills that help run 1:1s, hold people to their commitments, prepare for leader conversations, research policy and market-practice questions, and keep AI-built tools inside sensible guardrails.
 
 ## Skills
 
@@ -11,9 +11,6 @@ A personal Cowork/Claude Code plugin for HR business-partner work. Bundles eight
 | `prep-partnering` | Prepare for and capture conversations with the business leaders you partner with. Notes stay private. |
 | `build-rules` | Eight rules for deciding whether to build/automate an HR or ops task, and how it must behave. |
 | `research` | Research an HR or business-ops question across documents, law, and market data, grading every claim by source quality. |
-| `ask-before-producing` | Pause at the shift from gathering to producing and confirm the person is ready. |
-| `verification-before-completion` | Require evidence before claiming something is done, correct, or compliant. |
-| `eli5` | Explain a site, screenshot or snippet in plain, jargon-free language, tailored for a named audience. |
 
 ## Install
 
@@ -29,3 +26,7 @@ Add this repo as a plugin marketplace, then install `hr-workbench` from it.
 ## Versioning
 
 Semantic versioning: `MAJOR.MINOR.PATCH`. Adding a skill is usually a MINOR bump; a small fix is a PATCH. Any increase over the previously synced version triggers a re-pull.
+
+## Companion
+
+General working guardrails — ask before producing, permission before writing, verify before claiming done, and plain-language explainers — live in [general-skills](https://github.com/danisango12345/general-skills).
