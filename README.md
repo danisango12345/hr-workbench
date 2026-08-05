@@ -13,7 +13,7 @@ A personal Cowork/Claude Code plugin for HR business-partner work. Bundles eight
 | `research` | Research an HR or business-ops question across documents, law, and market data, grading every claim by source quality. |
 | `ask-before-producing` | Pause at the shift from gathering to producing and confirm the person is ready. |
 | `verification-before-completion` | Require evidence before claiming something is done, correct, or compliant. |
-| `eli5` | Explain a site, screenshot or snippet in plain, jargon-free language, pitched at a named audience. |
+| `eli5` | Explain a site, screenshot or snippet in plain, jargon-free language, tailored for a named audience. |
 
 ## Install
 
