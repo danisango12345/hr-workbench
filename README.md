@@ -9,7 +9,7 @@ A personal Cowork/Claude Code plugin for HR business-partner work. Bundles five 
 | `1-on-1` | Prepare for and capture 1:1s using a shared running doc, built around blockers, goals and development. |
 | `chase` | Track what people owe you and what you owe them; help hold people to what they agreed. |
 | `prep-partnering` | Prepare for and capture conversations with the business leaders you partner with. Notes stay private. |
-| `build-rules` | Eight rules for deciding whether to build/automate an HR or ops task, and how it must behave. |
+| `build-rules` | Nine rules for deciding whether to build/automate an HR or ops task, and how it must behave. |
 | `research` | Research an HR or business-ops question across documents, law, and market data, grading every claim by source quality. |
 
 ## Install

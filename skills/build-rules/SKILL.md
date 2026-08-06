@@ -1,20 +1,20 @@
 ---
 name: "build-rules"
-description: "Use when considering whether to build a tool, automate a task, or add a capability to HR and business-operations work. Eight rules covering what AI must not touch, whether something is worth building, and how anything built has to behave."
+description: "Use when considering whether to build a tool, automate a task, or add a capability to HR and business-operations work. Nine rules covering what AI must not touch, whether something is worth building, and how anything built has to behave."
 ---
 
 # Build rules
 
 The rules any proposed tool must pass before it gets built.
 
-Eight rules in three groups, applied in order. The first group kills ideas outright. The second
+Nine rules in three groups, applied in order. The first group kills ideas outright. The second
 decides whether survivors are worth the effort. The third governs how anything built must behave.
 
 ---
 
 ## Group one: hands off
 
-Four rules about what AI shouldn't touch at all. Failing any one ends the discussion, however much
+Five rules about what AI shouldn't touch at all. Failing any one ends the discussion, however much
 time the tool would save.
 
 ### 1. Never decide about a named individual — and never feed a decision about one
@@ -64,15 +64,10 @@ consider, what usually goes wrong, what to avoid saying. Don't write their sente
 *Passes:* a difficult-feedback **preparer**.
 *Fails:* a difficult-feedback **drafter**.
 
-A manager who never drafts their own hard feedback never learns to give it. And automating
-managers' difficult conversations produces managers who can't have them — which generates more
-employee relations work. Anything that relieves a symptom while worsening the cause is a net loss.
-
-**This applies to you, not only to the people you support.** Facts can be retrieved: what someone
-said, the date they said it, what happened, what a document contains. **Reasoning stays yours** —
-what a delay costs, what the consequence of something is, how to frame a point, what to actually
-say. A tool that hands over a ready-made argument leaves you defending reasoning you haven't done,
-which collapses the moment it's questioned.
+**Why: development.** The reps are how someone gets good at the hard parts of the job. A manager
+who never drafts their own hard feedback never learns to give it — and automating managers'
+difficult conversations produces managers who can't have them, which generates more employee
+relations work. Anything that relieves a symptom while worsening the cause is a net loss.
 
 **The caveat: drafting an artifact is not the same as exercising a skill.**
 
@@ -81,11 +76,34 @@ clause, a process, a standing guideline the organisation will operate within —
 production, not judgment. The judgment was deciding what the policy should say. The writing is
 execution, and a draft is fine.
 
-**The test:** does producing this exercise influence, feedback, development, or reasoning? Then
-it's yours. Does it set out a rule the organisation operates within? Then draft it — subject to
-rule 1, and to review where legal weight applies.
+**The test:** does producing this exercise influence, feedback, or development? Then it's theirs.
+Does it set out a rule the organisation operates within? Then draft it — subject to rule 1, and to
+review where legal weight applies.
 
-### 4. Where being written by you is the point
+### 4. Retrieve, don't reason
+
+Facts can be fetched. Conclusions can't.
+
+**Retrievable:** what someone said and when, what a document contains, what the numbers are, what
+changed since last quarter, what a source states.
+
+**Not retrievable:** what a delay costs. What a trend means. Why something is happening. What to do
+about it. How to frame a point. Which of two options is better.
+
+This applies to you as much as to anyone you support.
+
+*Passes:* a dashboard that displays trends and flags what changed.
+*Passes:* a dashboard that surfaces the questions the data raises.
+*Fails:* a dashboard that suggests direction.
+*Fails:* a tool that works out what a delay costs and hands you the argument.
+
+**Why: ownership.** You have to defend it in the room. An argument you didn't reason through
+collapses the moment it's questioned — and the questioning is where the value was meant to be.
+
+A tool can prompt the reasoning without doing it. Ask *what does this block, what do we lose by not
+doing this* — and let the answers be theirs.
+
+### 5. Where being written by you is the point
 
 Some things are worth something only because a particular person wrote them. Recognition, a
 reference, a personal note of thanks. Generated, they are worse than nothing — the recipient
@@ -95,7 +113,7 @@ eventually works out which they got.
 
 ## Group two: is it worth building
 
-### 5. What does doing it by hand actually cost?
+### 6. What does doing it by hand actually cost?
 
 Not frequency, and not whether it's repetitive. **Cost**, counted four ways:
 
@@ -115,7 +133,7 @@ building for.
 
 Not gates — requirements. Any tool passing groups one and two must satisfy all three.
 
-### 6. Data handling
+### 7. Data handling
 
 **Never pull in or write down:**
 
@@ -134,7 +152,7 @@ is a conscious act rather than something that happens incidentally while assembl
 Aggregate by default. Never carry an individual's details into a document that travels further than
 the source did.
 
-### 7. It must be checkable
+### 8. It must be checkable
 
 Four requirements, all of them:
 
@@ -150,7 +168,7 @@ Four requirements, all of them:
 Output that can't be verified is worse than no output. It converts uncertainty into apparent
 confidence, and the person who presents it is the one who has to defend it.
 
-### 8. Refuse misuse
+### 9. Refuse misuse
 
 Following from rule 2: notice when a tool is being used to avoid a human responsibility, and say so.
 This applies beyond duty of care — anything where the request suggests someone wants the tool to do
@@ -162,22 +180,25 @@ the part that requires them.
 
 | Candidate | Verdict | Rule |
 | --- | --- | --- |
-| Assemble context before starting work | Build | Passes all; needs rules 6 and 7 built in |
-| Track who owes what, prompt the follow-up | Build | Passes all; rules 3 and 8 matter here |
-| Evidenced research with graded sources | Build | Rule 7 is most of its design |
+| Assemble context before starting work | Build | Passes all; needs rules 7 and 8 built in |
+| Track who owes what, prompt the follow-up | Build | Passes all; rules 3, 4 and 9 matter here |
+| Evidenced research with graded sources | Build | Rule 8 is most of its design |
 | Record decisions and reasoning | Build | Passes all |
 | Review quality checker | Build | Checks a manager's work rather than replacing it |
-| Bonus and raise letters | Build | A form, not a judgment. Rule 6 gating on pay data |
+| Bonus and raise letters | Build | A form, not a judgment. Rule 7 gating on pay data |
 | Policy or handbook drafting | Build | Rule 3 caveat — codifies a decision already made. Then to legal |
+| KPI dashboard — displays trends, flags what changed | Build | Facts and arithmetic. Aggregate only |
+| KPI dashboard — surfaces the questions the data raises | Build | Rule 4 satisfied — prompts thinking rather than doing it |
 | Difficult feedback **preparer** | Build | Rule 3 satisfied — prepares, doesn't produce |
 | Difficult feedback **drafter** | No | Rule 3 |
-| Reasoning out what a delay costs, for you | No | Rule 3 — ask the questions, don't answer them |
+| Reasoning out what a delay costs, for you | No | Rule 4 — ask the questions, don't answer them |
+| KPI dashboard — suggests direction or recommends action | No | Rule 4 — that's reasoning, and it's yours. Also rule 8: on a dashboard, inference looks identical to fact |
 | Candidate summary for a hiring manager | No | Rule 1, second question — read immediately before a yes or no |
 | Termination or disciplinary drafting | No | Rule 2 — approved forms only, separate handling |
 | Layoff or redundancy audit | No | Rule 1 |
 | Performance ranking or calibration | No | Rule 1 |
 | Candidate screening or ranking | No | Rule 1 |
-| Recognition messages | No | Rule 4 |
+| Recognition messages | No | Rule 5 |
 | PIP drafting | No | Rules 2 and 3 |
 | Investigation structuring | No | Rule 1 in effect — one fixed template, never generated per case |
 
