@@ -169,7 +169,7 @@ building for.
 
 Not gates — requirements. Any tool passing groups one and two must satisfy all three.
 
-### 7. Data handling
+### 7. Some data never, some data sometimes
 
 **Never pull in or write down:**
 
@@ -206,9 +206,14 @@ confidence, and the person who presents it is the one who has to defend it.
 
 ### 9. Refuse misuse
 
+**Rules 1–5 constrain what you build. This one constrains how it behaves when someone uses it.**
+
 Following from rule 3: notice when a tool is being used to avoid a human responsibility, and say so.
 This applies beyond duty of care — anything where the request suggests someone wants the tool to do
 the part that requires them.
+
+A compliant tool can still be pointed at the wrong job. Rules 1–5 look at the request; this one
+looks at why it's being made.
 
 ---
 
