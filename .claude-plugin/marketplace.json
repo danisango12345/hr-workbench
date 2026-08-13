@@ -6,8 +6,8 @@
     {
       "name": "hr-workbench",
       "source": "./",
-      "description": "HR business-partner workbench: 1:1s, chasing commitments, partnering prep, research, and build rules for AI in People work.",
-      "version": "2.0.0"
+      "description": "HR business-partner workbench: 1:1s, chasing commitments, partnering prep, research, KPI tracking, and build rules for AI in People work.",
+      "version": "2.1.0"
     }
   ]
 }
