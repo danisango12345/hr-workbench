@@ -122,28 +122,30 @@ eventually works out which they got.
 
 ---
 
-### Three rules say don't write the words
+### Same outcome, three different reasons
 
-Rules 3, 4 and 5 all stop a tool producing what a person will say. They are not the same rule, and
-a tool can fail one while passing the others. The difference is *why*.
+Rules 3, 4 and 5 all land in the same place: the tool doesn't write the words. They're still
+separate rules, because the reason is different each time. A tool can break one and pass the other
+two.
 
-| Rule | Don't write the words because… | Protects |
+| Rule | Why the tool stays out | Who it protects |
 | --- | --- | --- |
-| **3** | someone has to be accountable in a consequential moment | the person receiving it |
-| **4** | the reps are how people learn the job | the person delivering it |
-| **5** | the value is that you wrote it | the meaning of the thing |
+| **3** | Someone has to own a moment that matters | The person on the receiving end |
+| **4** | Writing it yourself is how you learn | The person saying it |
+| **5** | The fact that you wrote it is the whole point | The gesture itself |
 
-**The cases that separate them:**
+**Where they split:**
 
-- An experienced HR director scripting a redundancy **passes 4** — they have had the reps — and
-  **fails 3**, because the person losing their job is owed someone who thought about it themselves.
-- A manager drafting an opener for a routine development chat **passes 3** — nothing lands hard —
-  and **fails 4**, because that is exactly the muscle they need to build.
-- A generated recognition note **passes 3 and 4** — no consequence, no skill being lost — and
-  **fails 5**, because a compliment nobody wrote isn't a compliment.
+- **An experienced HR director scripting a redundancy conversation.** They've had plenty of
+  practice, so rule 4 doesn't bite. Rule 3 does: the person losing their job deserves someone who
+  thought it through themselves.
+- **A manager wanting an opener for a routine development chat.** Nothing heavy is landing, so
+  rule 3 is fine. Rule 4 isn't: this is exactly the muscle they need to build.
+- **A generated recognition note.** No consequence, no skill at stake. It still fails rule 5,
+  because a compliment nobody wrote isn't a compliment.
 
-**Applying them to something new:** ask what the words are doing. Carrying a consequence, building
-a skill, or being the gesture itself. More than one can be true, and any one is enough to stop it.
+**Testing something new:** ask what the words are for. Carrying a consequence? Building a skill?
+Being the gesture? Often it's more than one, and any one is enough to say no.
 
 ---
 
