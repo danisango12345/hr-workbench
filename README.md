@@ -1,17 +1,25 @@
 # hr-workbench
 
-A personal Cowork/Claude Code plugin for HR business-partner work. Bundles six skills that help run 1:1s, hold people to their commitments, prepare for leader conversations, research policy and market-practice questions, track KPIs over time, and keep AI-built tools inside sensible guardrails.
+A personal Cowork/Claude Code plugin for HR business-partner work, plus specs for larger tools. Bundles six skills that help run 1:1s, hold people to their commitments, prepare for leader conversations, research policy and market-practice questions, track KPIs over time, and keep AI-built tools inside sensible guardrails.
 
 ## Skills
 
 | Skill | What it does |
-|-------|--------------|
+| ------- | -------------- |
 | `1-on-1` | Prepare for and capture 1:1s using a shared running doc, built around blockers, goals and development. |
 | `chase` | Track what people owe you and what you owe them; help hold people to what they agreed. |
 | `prep-partnering` | Prepare for and capture conversations with the business leaders you partner with. Notes stay private. |
 | `build-rules` | Nine rules for deciding whether to build/automate an HR or ops task, and how it must behave. |
 | `research` | Research an HR or business-ops question across documents, law, and market data, grading every claim by source quality. |
 | `kpis` | Set up KPIs, record them on a cadence, and render a dashboard showing movement over time. Displays; never interprets. |
+
+## Specs
+
+Designs for tools that are bigger than a skill. These live outside `skills/`, so the plugin doesn't load them.
+
+| Spec | What it is |
+|------|------------|
+| [`onboarding-automation`](onboarding-automation/SPEC.md) | v1 spec for an automation layer that runs the admin side of new hire onboarding: accounts, tool invites, devices, day-one calls, paperwork status, and I-9, E-Verify, and benefits deadlines. People approves every action, new hires only get messages People wrote, and the layer never touches sensitive data. |
 
 ## Install
 
