@@ -2,7 +2,7 @@
 
 > Automate the admin. Protect the human moments.
 
-**Status:** Draft v1.2
+**Status:** Draft v1.3
 **Type:** Portfolio tool (hr-workbench), built generic, working integrations
 **Scope:** Administrative onboarding only
 
@@ -40,6 +40,7 @@ This layer takes the admin off the People team's plate without taking the humani
 - Recurring meeting invites per profile stack
 - Device ordering or device reminders
 - Day-one calendar invites (People call, hiring manager call)
+- A People-written prompt to the hiring manager to create a 30-60-90 day plan (section 5.8)
 - A drafted pre-start to-do list for the welcome email, approved by People (section 5.7)
 - Escalations and reminders for stalled tasks
 - Reacting to HRIS changes (start date, location, rescinded offer), always with People's approval
@@ -48,7 +49,7 @@ This layer takes the admin off the People team's plate without taking the humani
 ### Out of scope for v1
 
 - Company layer (values, mission, org chart, customers, ways of working)
-- Role layer (30/60/90 plans, role tools training, intro meeting series)
+- Role layer (building 30/60/90 plans, role tools training, intro meeting series). v1 only prompts the manager to create the plan.
 - Offboarding
 - Contractors (handled separately)
 - Dedicated connectors for separate benefits platforms
@@ -65,7 +66,7 @@ These are baked into the product. The setup flow cannot turn them off.
 3. **The People team owns every approval.** Hiring managers, IT, and tool owners receive notifications and requests. They do not approve actions.
 4. **Changes are never automatic.** The layer never reschedules, cancels, or sends anything in response to an HRIS change without People's approval. Its only automatic response to a change is to pause.
 5. **Compliance clocks use business days, not hours.** Federal holidays are excluded.
-6. **Nothing is sent to an account that doesn't exist yet.** The layer confirms the work account is created and active before sending anything to it.
+6. **Nothing is sent to an account that doesn't exist yet.** The layer confirms the work account is created and active before sending anything to it. In direct mode, it verifies through the identity system. In request mode, the account owner's confirmation counts as active.
 7. **The layer never handles credentials.** Temporary passwords are delivered by the identity system itself (Google Workspace, Okta, etc.). The layer only tracks that delivery happened.
 8. **Research is not legal advice.** Any compliance research the layer produces is cited, graded by source agreement, and carries a reminder to confirm obligations with counsel.
 9. **Hard news stays human.** The layer never contacts a candidate or new hire about a rescinded offer, a no-start, or a separation. Cleanup (accounts, devices, tool owners) only unlocks after People confirms the conversation has happened. There is no template slot for rescission or termination messages.
@@ -79,7 +80,7 @@ These are baked into the product. The setup flow cannot turn them off.
 
 ### 4.1 Building profiles happens in setup mode only
 
-Profiles are built in the setup flow (section 12) and revisited when the company's needs change. **People never builds or edits profiles while onboarding a specific hire.**
+Profiles are built in the setup flow (section 12) and revisited when the company's needs change. **People never builds or edits profiles while onboarding a specific hire.** The one exception is the Custom path (4.5), which adjusts a single hire's plan without changing any profile.
 
 Editing a profile changes future hires only. Plans already in flight stay as approved.
 
@@ -113,7 +114,13 @@ The action waits until People picks. The choice is logged.
 
 ### 4.5 The Custom profile
 
-A Custom profile always exists for hires who don't fit a stack. Every action in a Custom plan is approved individually. **Off-pattern hires go to Custom.** There is no per-hire editing of a stacked plan.
+For hires who don't fit a stack. **Off-pattern hires go to Custom.** There is no per-hire editing of a standard stacked plan.
+
+How it works:
+1. People picks the closest stack as a starting point
+2. Every action in it becomes an individual approval: approve, or remove
+3. People can add actions, but only from what already exists in setup (the tool-owner directory, templates, groups, meetings). Nothing is invented per hire.
+4. The profiles themselves don't change
 
 ---
 
@@ -134,11 +141,19 @@ In every case, the connection is read-only and limited to the fields in section 
 - **Worker type** is Employee (contractors are handled separately)
 - **Employment type** is Full-time, Part-time, or Intern
 - **Status** is the one the company picked in setup as "this person is hired" (e.g. hired, offer accepted)
-- **Start date, work location, personal email, and manager** are filled in
+- **Start date, work location, personal email, and manager** are filled in. Work location must be precise enough to set a time zone (city, or an explicit time zone field). State alone isn't enough, because some states span two time zones (Oregon included).
 
 **Records that aren't ready** sit in a **Waiting for details** list on the dashboard, showing exactly which fields are missing. Nothing runs and nothing is suggested. When the HRIS fills the gaps, the record moves to the approval queue. If a record is still incomplete close to its start date, People gets a heads-up.
 
 Contractor records never enter the layer. They don't appear in Waiting for details.
+
+**Matching HRIS values.** HRIS systems label people differently (e.g. "Intern" may be a job class, not an employment type). In setup, the company maps its own HRIS values to Employee, Full-time, Part-time, and Intern, and previews which current records would pass.
+
+**Duplicates.** Each hire is matched on HRIS employee ID, then personal email. A manual entry that matches an HRIS record, or two records that look like the same person, are held as **Possible duplicate** for People to merge or dismiss. Nothing runs on either record until People decides.
+
+**Returning employees and conversions.** Before building a plan, the layer checks the identity system and tool-owner directory for existing accounts (rehires, intern to full-time, contractor to employee). Existing accounts show in the plan as **reactivate** or **adjust access**, never **create**. Request-mode emails say so, so tool owners don't create duplicates.
+
+**Late entries.** If a record passes the readiness check with a start date closer than the device lead time or the account deadline (or already past), the hire is flagged **Late entry** and moves to the top of the approvals queue. The plan shows what can't be done in time (e.g. "laptop can't arrive before Day 1"), so People can plan around it. Compliance clocks always run from the actual start date.
 
 ### 5.2 Approval flow
 
@@ -148,6 +163,10 @@ Contractor records never enter the layer. They don't appear in Waiting for detai
 4. Layer resolves the stack into a plan and surfaces any access conflicts
 5. People resolves conflicts and approves the plan in one click (Custom plans: per action)
 6. Actions run in dependency order (5.5)
+
+**Approvals have a clock.** A plan still pending approval as the start date approaches escalates to the approver, then to the backup approver (set in setup). Timing is configurable, e.g. 5 and 3 business days before start.
+
+**Changes before approval.** If the HRIS record changes while the plan is still pending, the layer rebuilds the suggestion, shows what changed, and the plan needs approval again.
 
 ### 5.3 Provisioning modes
 
@@ -174,19 +193,26 @@ Some actions can't fire until another one is confirmed. In request mode, "confir
 
 ```
 Work account created (direct, or confirmed by owner)
-  └─ Work account active (verified)
+  └─ Work account active (verified in direct mode, owner-confirmed in request mode)
        ├─ Tool access (direct or request)
        ├─ Group memberships
        ├─ Recurring meeting invites
        └─ Day-one calendar invites
 ```
 
-Device ordering, the state compliance check, and the to-do list draft do **not** depend on the work account. They start as soon as the plan is approved.
+Device ordering, the state compliance check, the to-do list draft, and the hiring manager's 30-60-90 prompt do **not** depend on the work account. They start as soon as the plan is approved.
+
+**Account deadline.** The work account must be active a set number of business days before start (configured in setup, default 3). If it isn't, People gets an escalation, because tool invites and day-one calendar invites are waiting on it.
+
+**Credentials in request mode.** The request to the work account owner includes the new hire's personal email and asks the owner to send sign-in instructions there through the identity system. The owner's confirmation covers both: account created, and sign-in instructions sent.
 
 ### 5.6 Per-hire states
 
-`Pending approval` → `Pre-start` → `Day one` → `Week one` → `Complete`
-Plus flags: `At risk`, `Escalated`, `State compliance incomplete`, `Access conflict`, `On hold: HRIS change pending`
+`Waiting for details` → `Pending approval` → `Pre-start` → `Day one` → `In progress` → `Complete`
+
+Plus flags: `At risk`, `Late entry`, `Possible duplicate`, `Escalated`, `State compliance incomplete`, `Access conflict`, `On hold: HRIS change pending`
+
+**Complete** means every action in the plan is closed: accounts and tool access confirmed, I-9 and E-Verify done, benefits elected, waived, or window closed, and the 30-60-90 prompt confirmed (if tracked). A hire isn't marked complete while the benefits window is still open.
 
 
 ### 5.7 Welcome email to-do list
@@ -207,6 +233,19 @@ People writes the welcome email (from scratch or from their own template). The l
 - People reviews, edits, and approves the list before it's included in the email
 - Nothing in the list reaches the new hire without that approval
 - If the plan changes before the email is sent, the draft is regenerated and needs approval again
+- Items that don't exist yet (work account, tool invites, laptop tracking) show as **pending** in the draft, not as facts
+- Right before People sends the welcome, the layer refreshes the list. Anything that changed since approval is highlighted and needs a quick re-approval
+
+### 5.8 Hiring manager 30-60-90 prompt
+
+People writes a template email asking the hiring manager to create a 30-60-90 day plan, and uploads it in setup. The layer only fills merge fields (new hire's name, role, start date, manager's name) and sends it.
+
+- **Recipient:** the hiring manager from the HRIS record
+- **When:** after the plan is approved, at a set number of business days before start (configured in setup, e.g. 10). For late entries, it goes out as soon as the plan is approved.
+- **Approval:** included in the plan approval, like every other action
+- **Tracking (optional):** the email includes a **Mark done** link. If the manager hasn't confirmed by a set point (e.g. 2 business days before start), they get one reminder, then People gets an escalation.
+- **The layer never drafts or reviews the plan itself.** The 30-60-90 is the manager's work.
+
 ---
 
 ## 6. Timeline
@@ -220,13 +259,18 @@ All timing is relative to the **start date** (Day 1), except where noted.
 | Plan approved | Create work account (direct) or send request (request mode) | Identity system / account owner | Credentials delivered by identity system, not the layer |
 | Plan approved | State compliance check, if new state | People | See section 8. Flags, never blocks. |
 | Plan approved | Draft the pre-start to-do list | People | People reviews, edits, and approves (section 5.7) |
+| Configurable (e.g. 10 business days before start) | 30-60-90 prompt from People's template | Hiring manager | Section 5.8 |
+| Account deadline (default 3 business days before start) | Work account active check | People | Escalate if not active (section 5.5) |
 | Account active | Tool access, groups, recurring meetings | Work account / tool owners | Per stack, direct or request |
 | Account active | Day-one calendar invites | Work account | Scheduled per section 7 |
-| Pre-start (configurable) | People sends their welcome email | **Personal** email | People writes the email; the approved to-do list block is included (section 5.7) |
+| Pre-start (configurable) | People sends their welcome email | **Personal** email | People writes the email; the to-do list is refreshed and the approved block is included (section 5.7) |
 | Pre-start | Paperwork reminders per stalled-paperwork rules | Personal email / People | Per form |
-| Day 1, before first call | First-login check | People | No first login X minutes before the People call → escalate |
-| End of Day 1 | I-9 Section 1 check | People + new hire | Hard rule |
-| End of business day 2 | I-9 Section 2 + E-Verify check | People + new hire | Hard rule. One business day of runway before the deadline |
+| Pre-start (fixed, e.g. 2 business days before start) | I-9 Section 1 reminder from People's template | Personal email | Hard rule. Only if Section 1 is available to complete before Day 1 |
+| Day 1, before first call | First-login check | People | Direct mode: read from the identity system. Request mode: People confirms manually. No login X minutes before the People call → escalate |
+| Day 1, midday | I-9 Section 1 check | People + new hire | Hard rule. Escalates while there's still time to finish |
+| End of Day 1 | I-9 Section 1 deadline | People | Hard rule. If still incomplete, flagged overdue |
+| End of business day 2 | I-9 Section 2 check | People + new hire | Hard rule. One business day of runway before the deadline |
+| End of business day 2 | E-Verify case check | People | Hard rule. Employer task, so People only |
 | Benefits window | Enrollment checks and reminders | People + new hire | See section 9.3 |
 
 ---
@@ -241,6 +285,7 @@ Two calls on Day 1: the **People call** first thing, then the **hiring manager c
 - Default length of each call
 - Who on People hosts by default
 - For each host and manager: their time zone, and **"If you're onboarding someone in an earlier time zone (e.g. you're on the West Coast and they're on the East Coast), what's the earliest you'd start a day-one call in your time zone?"**
+- **Managers added later:** the first time a manager without settings appears on a hire, the layer uses the company's standard workday start in the manager's time zone, flags it for People, and sends the manager the same question so their answer is saved for next time
 
 ### 7.2 Scheduling rule (shown upfront in setup, with examples)
 
@@ -255,7 +300,7 @@ Two calls on Day 1: the **People call** first thing, then the **hiring manager c
 - New hire in Denver → 8:00 Pacific / **9:00 Mountain**
 - New hire in Seattle → **9:00 Pacific**, no compromise needed
 
-The new hire's time zone comes from their HRIS work location. Call times go into the to-do list draft in the new hire's local time.
+The new hire's time zone comes from their HRIS work location at city level (or an explicit time zone field). If the layer can't tell the time zone for sure, it flags People to confirm before scheduling. Call times go into the to-do list draft in the new hire's local time.
 
 ---
 
@@ -299,7 +344,10 @@ A new hire's work location is a state the company isn't yet registered in. This 
 
 ### 9.1 Form I-9 (hard rule)
 
-- **Section 1** (new hire): due by end of first day of work. Not complete by end of Day 1 → escalate to People **and** the new hire.
+- **Section 1** (new hire): due by end of first day of work.
+  - **Pre-start reminder** (fixed, e.g. 2 business days before start) from People's template, if the HRIS lets new hires complete Section 1 before Day 1
+  - **Midday Day 1 check:** not complete → escalate to People **and** the new hire, while there's still time
+  - **End of Day 1:** still not complete → flagged overdue for People
 - **Section 2** (employer): due within 3 business days of the first day of work. Not complete by end of business day 2 → escalate to People **and** the new hire (who may need to present documents).
 - **Clock starts at the start date**, not the hire date.
 - **Setup check:** does the HRIS report Section 1 and Section 2 separately? If not, the layer falls back to a single I-9 status and escalates on the Section 1 deadline. The setup flow warns the user about this.
@@ -307,7 +355,7 @@ A new hire's work location is a state the company isn't yet registered in. This 
 ### 9.2 E-Verify (if enrolled)
 
 - Cases must be created no later than the third business day after the employee starts work for pay.
-- Tracked alongside I-9 Section 2. Not complete by end of business day 2 → escalate to People.
+- Tracked alongside I-9 Section 2. Not complete by end of business day 2 → escalate to **People only**. It's an employer task, so the new hire isn't contacted about it.
 - Setup flow asks: enrolled in E-Verify? (Also required to use the DHS remote I-9 alternative procedure.)
 
 ### 9.3 Benefits enrollment
@@ -396,18 +444,19 @@ The hire shows `On hold: HRIS change pending` until People clears it.
 
 Run once when a company adopts the tool. Every answer is editable later. **This is where all profile building happens.**
 
-1. **HRIS / PEO.** Which one? How should the layer hear about new records (webhook, polling, or manual)? Which HRIS status means "hired"? Check: does it report I-9 sections separately? Does it expose benefits and state reporting status?
-2. **Identity and email.** Google Workspace, Microsoft 365, Okta, other. Direct or request mode for the work account. Confirm "force password change at first login" is on. Confirm credential delivery method (identity system's own sign-in email to personal address).
+1. **HRIS / PEO.** Which one? How should the layer hear about new records (webhook, polling, or manual)? Which HRIS status means "hired"? **Map the HRIS's own values** to Employee, Full-time, Part-time, and Intern, and preview which records pass the readiness check. Which field holds the work location's city or time zone? Check: does it report I-9 sections separately? Does it expose benefits and state reporting status?
+2. **Identity and email.** Google Workspace, Microsoft 365, Okta, other. Direct or request mode for the work account. Account deadline (how many business days before start the account must be active). Confirm "force password change at first login" is on. Confirm credential delivery method (identity system's own sign-in email to personal address).
 3. **Tool-owner directory.** For each tool: who provisions it, direct or request mode, available access levels, and a **one-line plain-English description of each level** (used in access conflict flags). Request-mode reply deadline and reminder cadence.
 4. **Calendar.** Which calendar system sends day-one invites?
-5. **Dashboard home.** Where should the dashboard live? (e.g. Google Sheets, standalone web view). The layer does the setup lift for the chosen option at this step.
-6. **Templates.** Upload every templated new-hire-facing message: reminders, required state notices, day-one invite descriptions. Optionally, a welcome email template People wrote. The to-do list block is drafted per hire (section 5.7).
+5. **Dashboard home.** Where should the dashboard live? (e.g. Google Sheets, standalone web view). The layer does the setup lift for the chosen option at this step. Wherever it lives, it's a **read-only view**: approvals happen through the layer's own approval links or screen, and the audit log is kept by the layer where it can't be edited.
+6. **Templates.** Upload every templated message: paperwork reminders, the I-9 Section 1 reminder and Day 1 escalation, required state notices, day-one invite descriptions, and the **hiring manager 30-60-90 prompt** (section 5.8), with its send timing and whether to track it. Optionally, a welcome email template People wrote. The to-do list block is drafted per hire (section 5.7).
 7. **Day-one calls.** Standard workday start, call lengths, default hosts, and each host's and manager's earliest acceptable time (section 7). The scheduling rule is shown with examples.
 8. **Devices.** Choose a path:
    - Fire a device request to IT or a vendor (ticket, email, or form) and track status, **or**
    - Remind People to order by X days before start
    - Set expected shipping lead time (used for the `At risk` flag)
    - Equipment tied to an accommodation is handled by People directly, outside the layer. The device request only ever carries the standard device for the stack.
+   - **Shipping address:** the layer never stores it. Choose how IT or the vendor gets it: pulled from the HRIS by IT, or collected directly from the new hire by the vendor's own form. The device request only carries the new hire's name, start date, device, and where to get the address.
 9. **Compliance.** E-Verify enrolled? Benefits setup (section 9.3)? Which states is the company already registered in? Does the PEO or payroll provider handle state registrations?
 10. **Stalled-paperwork rules.** Per form, per section 10.
 11. **First-login check.** How many minutes before the first day-one call?
@@ -419,7 +468,7 @@ Run once when a company adopts the tool. Every answer is editable later. **This 
     5. Pick the device path (base layers)
     6. Use default day-one call settings or override them. A base layer can't be saved without a day-one People call (hard rule 12).
     7. Preview the full plan for a sample hire, then save
-13. **Approvers.** Who on the People team can approve.
+13. **Approvers.** Who on the People team can approve, a **backup approver**, and when unapproved plans escalate before start.
 
 ---
 
@@ -428,13 +477,14 @@ Run once when a company adopts the tool. Every answer is editable later. **This 
 One place for People to see everything.
 
 - **Approvals queue:** plans, Custom actions, access conflicts, outgoing tool requests, and change plans waiting on a decision
+- **Late entries and possible duplicates:** at the top, because they need a decision first
 - **Waiting for details:** records that haven't passed the readiness check, with the missing fields listed
 - **New hires:** every active hire, their stack, start date, and state
 - **Per-hire view:** every action with status, mode (direct or request), timestamp, and who approved it
 - **Escalations:** overdue compliance items first, then stalled paperwork, unanswered tool requests, and `At risk` flags
 - **Every flag shows its basis:** the source, the matched field, the reply, or the estimate's inputs
 - **State compliance:** open checklists per state, with sources and counsel checkboxes
-- **Audit log:** what was sent, when, to whom, from which template, approved by whom
+- **Audit log:** what was sent, when, to whom, from which template, approved by whom. Append-only: entries can't be edited or deleted, including from a spreadsheet view.
 
 **Never shown in the dashboard:** any sensitive data. Status flags only.
 
@@ -445,7 +495,7 @@ One place for People to see everything.
 | Stores | Never stores |
 | --- | --- |
 | Name, work email, personal email | SSN, tax IDs, bank details |
-| Start date, location (state level), time zone, department, employment type | I-9 or ID documents |
+| Start date, work location (city and state), time zone, department, job title, worker and employment type, HRIS employee ID | I-9 or ID documents |
 | Manager and People contact | Passwords or temporary credentials |
 | Profile stack and action list | Benefits elections |
 | Tool-owner directory and access level descriptions | Shipping address (lives in HRIS or vendor form) |
@@ -463,7 +513,9 @@ One place for People to see everything.
 - **Reply parsing must be conservative.** In request mode, only a clear yes or the Mark done link checks an item off. Anything ambiguous goes to People.
 - **Business-day math** needs a holiday calendar.
 - **Time zone math** needs the new hire's work location and every host's and manager's time zone.
-- **Idempotency matters.** If the HRIS sends the same event twice, the layer must not create two accounts or send two requests.
+- **Idempotency matters.** If the HRIS sends the same event twice, the layer must not create two accounts or send two requests. The same goes across sources: a webhook and a manual entry for one person are one hire.
+- **Check before create.** Every account action looks for an existing account first, so rehires and conversions reactivate instead of duplicating.
+- **The audit log is append-only** and lives in the layer's own storage. Any spreadsheet or dashboard is a view of it, never the record.
 - **Least privilege.** Each integration gets only the permissions its actions need.
 - **Data quality is the real risk.** Most provisioning failures trace back to inconsistent fields between HRIS and identity systems (misspelled department, missing manager). The setup flow should validate field mappings before go-live.
 
