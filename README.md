@@ -19,7 +19,7 @@ Designs for tools that are bigger than a skill. These live outside `skills/`, so
 
 | Spec | What it is |
 |------|------------|
-| [`onboarding-automation`](onboarding-automation/SPEC.md) | v1 spec for an automation layer that runs the admin side of new hire onboarding: accounts, tool invites, devices, day-one calls, paperwork status, and I-9, E-Verify, and benefits deadlines. People approves every action, new hires only get messages People wrote, and the layer never touches sensitive data. |
+| [`onboarding-automation`](onboarding-automation/SPEC.md) | v1 spec for an automation layer that runs the admin side of new hire onboarding: accounts and tool access (created directly or requested from tool owners), devices, time-zone-aware day-one calls, paperwork status, I-9, E-Verify, and benefits deadlines, and state compliance checks for the first hire in a new state. Profiles are built once and stacked per hire. People approves every action and every change, new hires only get messages People wrote or approved, and the layer never touches sensitive data. |
 
 ## Install
 
