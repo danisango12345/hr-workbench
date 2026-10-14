@@ -50,6 +50,7 @@ This layer takes the admin off the People team's plate without taking the humani
 - Company layer (values, mission, org chart, customers, ways of working)
 - Role layer (30/60/90 plans, role tools training, intro meeting series)
 - Offboarding
+- Contractors (handled separately)
 - Dedicated connectors for separate benefits platforms
 - AI-drafted welcome emails or reminders (only the to-do list is drafted)
 
@@ -86,7 +87,7 @@ Editing a profile changes future hires only. Plans already in flight stay as app
 
 A hire's plan is one **base layer** plus any number of **add-on layers**.
 
-- **Base layer** (one per employment type: e.g. Full-time, Part-time, Contractor, Intern). Paperwork rules, benefits eligibility, work email, company-wide tools, company-wide pre-reading, device path, day-one calls.
+- **Base layer** (one per employment type: Full-time, Part-time, Intern). Paperwork rules, benefits eligibility, work email, company-wide tools, company-wide pre-reading, device path, day-one calls.
 - **Add-on layers** (department, role, location, or anything the team needs). Mostly tools, access levels, and team-specific pre-reading. Location add-ons can carry state-specific notices (e.g. Paid Leave Oregon).
 
 **Pre-reading** is a list of links on each layer (handbook, benefits guide, team docs). It stacks like tools do and feeds the to-do list.
@@ -95,7 +96,7 @@ Each layer defines when it applies, using HRIS fields (e.g. employment type = fu
 
 ### 4.3 Starter layers
 
-The tool ships with starter base layers (Full-time, Part-time, Contractor, Intern) with sensible defaults, so nobody starts from a blank page. Any layer can be duplicated and edited.
+The tool ships with starter base layers (Full-time, Part-time, Intern) with sensible defaults, so nobody starts from a blank page. Any layer can be duplicated and edited.
 
 ### 4.4 Access conflicts
 
@@ -120,11 +121,28 @@ A Custom profile always exists for hires who don't fit a stack. Every action in 
 
 ### 5.1 Trigger
 
-**New hire record created in the HRIS/PEO.** The HRIS stays the single source of truth.
+**A new hire record in the HRIS/PEO that passes the readiness check.** The HRIS stays the single source of truth.
+
+**How the layer hears about new records** (chosen in setup, based on what the HRIS supports):
+1. **The HRIS sends a message (webhook).** Near-instant. Supported by most modern HRIS.
+2. **The layer checks on a schedule (polling).** Every 15 minutes or so. Slower, but works almost everywhere.
+3. **People adds the hire directly (manual).** A simple form or spreadsheet upload. The fallback when there's no usable connection.
+
+In every case, the connection is read-only and limited to the fields in section 14.
+
+**Readiness check.** A record only starts onboarding when all of these are true:
+- **Worker type** is Employee (contractors are handled separately)
+- **Employment type** is Full-time, Part-time, or Intern
+- **Status** is the one the company picked in setup as "this person is hired" (e.g. hired, offer accepted)
+- **Start date, work location, personal email, and manager** are filled in
+
+**Records that aren't ready** sit in a **Waiting for details** list on the dashboard, showing exactly which fields are missing. Nothing runs and nothing is suggested. When the HRIS fills the gaps, the record moves to the approval queue. If a record is still incomplete close to its start date, People gets a heads-up.
+
+Contractor records never enter the layer. They don't appear in Waiting for details.
 
 ### 5.2 Approval flow
 
-1. HRIS creates the new hire record
+1. A new hire record passes the readiness check
 2. Layer suggests a stack (base + add-ons) from HRIS fields
 3. People confirms the stack or swaps layers. No building, no editing.
 4. Layer resolves the stack into a plan and surfaces any access conflicts
@@ -303,7 +321,7 @@ The layer never sends the enrollment invite, shows plans, or sees elections. Tha
 - **Window length** (commonly 30 days)
 - **Reminder rule:** reminder template to the new hire plus a People alert, or People only
 - **Escalation point:** e.g. 5 business days before close
-- **Eligibility per base layer:** e.g. Full-time eligible, Contractor not
+- **Eligibility per base layer:** e.g. Full-time eligible, Intern not
 
 **Per hire:**
 
@@ -378,7 +396,7 @@ The hire shows `On hold: HRIS change pending` until People clears it.
 
 Run once when a company adopts the tool. Every answer is editable later. **This is where all profile building happens.**
 
-1. **HRIS / PEO.** Which one? Connect. Check: does it report I-9 sections separately? Does it expose benefits and state reporting status?
+1. **HRIS / PEO.** Which one? How should the layer hear about new records (webhook, polling, or manual)? Which HRIS status means "hired"? Check: does it report I-9 sections separately? Does it expose benefits and state reporting status?
 2. **Identity and email.** Google Workspace, Microsoft 365, Okta, other. Direct or request mode for the work account. Confirm "force password change at first login" is on. Confirm credential delivery method (identity system's own sign-in email to personal address).
 3. **Tool-owner directory.** For each tool: who provisions it, direct or request mode, available access levels, and a **one-line plain-English description of each level** (used in access conflict flags). Request-mode reply deadline and reminder cadence.
 4. **Calendar.** Which calendar system sends day-one invites?
@@ -410,6 +428,7 @@ Run once when a company adopts the tool. Every answer is editable later. **This 
 One place for People to see everything.
 
 - **Approvals queue:** plans, Custom actions, access conflicts, outgoing tool requests, and change plans waiting on a decision
+- **Waiting for details:** records that haven't passed the readiness check, with the missing fields listed
 - **New hires:** every active hire, their stack, start date, and state
 - **Per-hire view:** every action with status, mode (direct or request), timestamp, and who approved it
 - **Escalations:** overdue compliance items first, then stalled paperwork, unanswered tool requests, and `At risk` flags
