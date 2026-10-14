@@ -2,7 +2,7 @@
 
 > Automate the admin. Protect the human moments.
 
-**Status:** Draft v1.1
+**Status:** Draft v1.2
 **Type:** Portfolio tool (hr-workbench), built generic, working integrations
 **Scope:** Administrative onboarding only
 
@@ -59,7 +59,7 @@ This layer takes the admin off the People team's plate without taking the humani
 
 These are baked into the product. The setup flow cannot turn them off.
 
-1. **No sensitive data, ever.** SSNs, bank details, tax forms, I-9 documents, and passwords live in the HRIS, PEO, or identity system. The layer only stores status flags (`sent`, `in_progress`, `done`, `overdue`).
+1. **No sensitive data, ever.** SSNs, bank details, tax forms, I-9 documents, and passwords live in the HRIS, PEO, or identity system. The layer only stores status flags (`sent`, `in_progress`, `done`, `overdue`). It also never pulls in or records **health, medical, disability, or accommodation information**, or **pay or performance history**. Its HRIS access is limited to the fields listed in section 14.
 2. **New-hire-facing words are human, with one exception.** Every new-hire-facing message is written by People or comes from a template People uploaded. The only exception is the **pre-start to-do list** in the welcome email: the layer drafts it from the hire's plan, and People reviews, edits, and approves it before it's included. Nothing AI-drafted reaches a new hire without that approval.
 3. **The People team owns every approval.** Hiring managers, IT, and tool owners receive notifications and requests. They do not approve actions.
 4. **Changes are never automatic.** The layer never reschedules, cancels, or sends anything in response to an HRIS change without People's approval. Its only automatic response to a change is to pause.
@@ -67,6 +67,10 @@ These are baked into the product. The setup flow cannot turn them off.
 6. **Nothing is sent to an account that doesn't exist yet.** The layer confirms the work account is created and active before sending anything to it.
 7. **The layer never handles credentials.** Temporary passwords are delivered by the identity system itself (Google Workspace, Okta, etc.). The layer only tracks that delivery happened.
 8. **Research is not legal advice.** Any compliance research the layer produces is cited, graded by source agreement, and carries a reminder to confirm obligations with counsel.
+9. **Hard news stays human.** The layer never contacts a candidate or new hire about a rescinded offer, a no-start, or a separation. Cleanup (accounts, devices, tool owners) only unlocks after People confirms the conversation has happened. There is no template slot for rescission or termination messages.
+10. **Flags show their work.** Estimates are labeled as estimates and show their inputs. Suggestions show what they matched on. Check-offs carry the evidence that closed them. What a source says and what the layer concluded are never presented the same way.
+11. **Prompts, not conclusions.** When a person is stuck, escalations give People questions to check, never an explanation of the person's behavior.
+12. **The human first day can't be automated away.** Every base layer must include a day-one People call. The profile builder won't save a base layer without one.
 
 ---
 
@@ -87,7 +91,7 @@ A hire's plan is one **base layer** plus any number of **add-on layers**.
 
 **Pre-reading** is a list of links on each layer (handbook, benefits guide, team docs). It stacks like tools do and feeds the to-do list.
 
-Each layer defines when it applies, using HRIS fields (e.g. employment type = full-time, department = Finance, work state = OR). That's how the layer suggests a stack automatically.
+Each layer defines when it applies, using HRIS fields (e.g. employment type = full-time, department = Finance, work state = OR). That's how the layer suggests a stack automatically. Every suggested layer shows the field that matched it (e.g. *Finance add-on: department = Finance*), so People can check the suggestion at a glance.
 
 ### 4.3 Starter layers
 
@@ -142,7 +146,7 @@ Most companies will run a mix. Many tools only support direct provisioning on pa
 2. People verifies the access level and approves the send
 3. Tool owner receives the request, which includes a one-click **Mark done** link
 4. Owner confirms:
-   - **Clear yes (reply or link)** → item checked off, timestamped, logged
+   - **Clear yes (reply or link)** → item checked off, timestamped, logged, with the owner's reply text or link click attached as evidence
    - **Unclear reply, or a different access level than requested** → flagged for People to confirm before it's checked off
    - **No reply by the configured deadline** → reminder to the owner, then escalation to People
 
@@ -194,7 +198,7 @@ All timing is relative to the **start date** (Day 1), except where noted.
 | When | Action | Recipient | Notes |
 | --- | --- | --- | --- |
 | Plan approved | Order device (or remind People to order) | IT / vendor / People | Fires immediately, regardless of lead time |
-| Plan approved | Flag `At risk` if start date is closer than device shipping lead time | People | So People can plan a backup |
+| Plan approved | Flag `At risk` if start date is closer than device shipping lead time | People | Labeled as an estimate, with the math shown (e.g. "Estimate: 7-day lead time, 4 business days to start") |
 | Plan approved | Create work account (direct) or send request (request mode) | Identity system / account owner | Credentials delivered by identity system, not the layer |
 | Plan approved | State compliance check, if new state | People | See section 8. Flags, never blocks. |
 | Plan approved | Draft the pre-start to-do list | People | People reviews, edits, and approves (section 5.7) |
@@ -262,7 +266,7 @@ A new hire's work location is a state the company isn't yet registered in. This 
 
 - A state compliance checklist on the dashboard, with a **confirmed with counsel** checkbox per item
 - The hire is flagged `State compliance incomplete` until every item is checked
-- `At risk` flag if the start date is too close to realistically finish registration before first payroll
+- `At risk` flag if the start date may be too close to finish registration before first payroll. Labeled as an estimate, showing the typical processing time it assumed and its source.
 
 **Incomplete state compliance flags the hire. It never blocks onboarding.** Everything else keeps running.
 
@@ -343,7 +347,10 @@ And sets:
 - IT security training
 - Policy and handbook acknowledgments
 
-Repeated non-completion is usually a blocker (access issue, unclear instructions), not negligence. Escalations to People should say so.
+When a form stays incomplete after reminders, the escalation gives People questions to check, not a conclusion about the person:
+- Can they access the system the form lives in?
+- Are the instructions clear for their situation?
+- Is anything waiting on someone else?
 
 ---
 
@@ -362,7 +369,7 @@ The hire shows `On hold: HRIS change pending` until People clears it.
 | --- | --- |
 | Start date moves | New dates for every pending action; updated calendar invites, and a corrected to-do list for People to approve and resend if the welcome already went out |
 | Location changes | Hold or redirect the device shipment if not yet shipped; new state compliance check if it's a new state; updated location add-on layers; new day-one call times |
-| Offer rescinded / no-start | Cancel pending actions; revoke created accounts; request device return; notify tool owners |
+| Offer rescinded / no-start | Stop all pending actions. **Nothing else is proposed until People confirms the conversation with the candidate has happened** (hard rule 9). Then: revoke created accounts, request device return through IT or the vendor (never from the candidate), notify tool owners |
 | Profile-relevant field changes (department, employment type) | A revised stack |
 
 ---
@@ -382,6 +389,7 @@ Run once when a company adopts the tool. Every answer is editable later. **This 
    - Fire a device request to IT or a vendor (ticket, email, or form) and track status, **or**
    - Remind People to order by X days before start
    - Set expected shipping lead time (used for the `At risk` flag)
+   - Equipment tied to an accommodation is handled by People directly, outside the layer. The device request only ever carries the standard device for the stack.
 9. **Compliance.** E-Verify enrolled? Benefits setup (section 9.3)? Which states is the company already registered in? Does the PEO or payroll provider handle state registrations?
 10. **Stalled-paperwork rules.** Per form, per section 10.
 11. **First-login check.** How many minutes before the first day-one call?
@@ -391,7 +399,7 @@ Run once when a company adopts the tool. Every answer is editable later. **This 
     3. Pick tools and access levels from the tool-owner directory
     4. Pick groups, recurring meetings, and pre-reading links
     5. Pick the device path (base layers)
-    6. Use default day-one call settings or override them
+    6. Use default day-one call settings or override them. A base layer can't be saved without a day-one People call (hard rule 12).
     7. Preview the full plan for a sample hire, then save
 13. **Approvers.** Who on the People team can approve.
 
@@ -405,6 +413,7 @@ One place for People to see everything.
 - **New hires:** every active hire, their stack, start date, and state
 - **Per-hire view:** every action with status, mode (direct or request), timestamp, and who approved it
 - **Escalations:** overdue compliance items first, then stalled paperwork, unanswered tool requests, and `At risk` flags
+- **Every flag shows its basis:** the source, the matched field, the reply, or the estimate's inputs
 - **State compliance:** open checklists per state, with sources and counsel checkboxes
 - **Audit log:** what was sent, when, to whom, from which template, approved by whom
 
@@ -421,7 +430,9 @@ One place for People to see everything.
 | Manager and People contact | Passwords or temporary credentials |
 | Profile stack and action list | Benefits elections |
 | Tool-owner directory and access level descriptions | Shipping address (lives in HRIS or vendor form) |
-| Status flags, timestamps, approval records | Anything in the HRIS beyond what's listed here |
+| Status flags, timestamps, approval records | Health, medical, disability, or accommodation information |
+| Owner replies attached as evidence | Pay or performance history |
+| | Anything in the HRIS beyond what's listed here |
 | State compliance checklists with sources | |
 
 ---
